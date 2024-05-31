@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using Zenject;
 
 namespace TopDown.Game.Character
 {
@@ -7,10 +8,20 @@ namespace TopDown.Game.Character
 	public class CharacterWalker : MonoBehaviour
 	{
 		private NavMeshAgent navMeshAgent;
+		private CharacterSettings characterSettings;
+
+		[Inject]
+		private void Construct(CharacterSettings characterSettings)
+		{
+			this.characterSettings = characterSettings;
+		}
 
 		private void Awake()
 		{
 			navMeshAgent = GetComponent<NavMeshAgent>();
+			navMeshAgent.speed = characterSettings.Speed;
+			navMeshAgent.acceleration = characterSettings.Acceleration;
+			navMeshAgent.angularSpeed = characterSettings.AngularSpeed;
 		}
 
 		public void WalkTo(Vector3 position)
