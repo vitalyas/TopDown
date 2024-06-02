@@ -8,17 +8,12 @@ namespace TopDown.Game.Character
 	public class CharacterWalker : MonoBehaviour
 	{
 		private NavMeshAgent navMeshAgent;
-		private CharacterSettings characterSettings;
 
 		[Inject]
-		private void Construct(CharacterSettings characterSettings)
+		private void Construct(CharacterSettings characterSettings,
+			NavMeshAgent navMeshAgent)
 		{
-			this.characterSettings = characterSettings;
-		}
-
-		private void Awake()
-		{
-			navMeshAgent = GetComponent<NavMeshAgent>();
+			this.navMeshAgent = navMeshAgent;
 			navMeshAgent.speed = characterSettings.Speed;
 			navMeshAgent.acceleration = characterSettings.Acceleration;
 			navMeshAgent.angularSpeed = characterSettings.AngularSpeed;
@@ -29,21 +24,12 @@ namespace TopDown.Game.Character
 			navMeshAgent.SetDestination(position);
 		}
 
-		private void OnEnable()
+		public bool IsWalking()
 		{
-			EventBus.Subscribe<ObjectClickedEvent>(OnFloorClicked);
-		}
-
-		private void OnDisable()
-		{
-			EventBus.Unsubscribe<ObjectClickedEvent>(OnFloorClicked);
-		}
-
-		private void OnFloorClicked(ObjectClickedEvent e)
-		{
-			var ray = Camera.main.ScreenPointToRay(e.ClickPositionOnScreen);
-			Physics.Raycast(ray, out var hit);
-			WalkTo(hit.point);
+			if (navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance)
+				return true;
+			
+			return false;
 		}
 	}
 }
