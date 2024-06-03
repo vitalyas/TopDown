@@ -24,17 +24,24 @@ namespace TopDown.Game.Character
 		private void OnEnable()
 		{
 			EventBus.Subscribe<ObjectClickedEvent>(OnFloorClicked);
+			EventBus.Subscribe<GameExitButtonPressedEvent>(OnExitButtonClicked);
 		}
 
 		private void OnDisable()
 		{
 			EventBus.Unsubscribe<ObjectClickedEvent>(OnFloorClicked);
+			EventBus.Unsubscribe<GameExitButtonPressedEvent>(OnExitButtonClicked);
 		}
 
 		private void OnFloorClicked(ObjectClickedEvent e)
 		{
 			characterTaskQueue.Enqueue(new CharacterTaskWalk(characterWalker, CoordinatesUtility.ScreenCoordinatesToWorld(e.ClickPositionOnScreen, camera)));
 			characterTaskQueue.TryStart();
+		}
+
+		private void OnExitButtonClicked(GameExitButtonPressedEvent e)
+		{
+			characterTaskQueue.Stop();
 		}
 	}
 }

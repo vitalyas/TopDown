@@ -53,6 +53,7 @@ namespace TopDown.Game.Character.Tasks
 			if (isStarted)
 			{
 				cancellationTokenSource.Cancel();
+				isStarted = false;
 			}
 		}
 	}

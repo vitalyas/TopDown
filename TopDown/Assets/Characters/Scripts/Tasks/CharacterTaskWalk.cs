@@ -18,13 +18,18 @@ namespace TopDown.Game.Character.Tasks
 		public async UniTask Execute(CancellationToken cancellationToken)
 		{
 			characterWalker.WalkTo(walkPosition);
+			cancellationToken.Register(Stop);
 
 			while (characterWalker.IsWalking())
 			{
-				UnityEngine.Debug.Log(characterWalker.IsWalking());
 				if (!cancellationToken.IsCancellationRequested)
 					await UniTask.DelayFrame(1, cancellationToken: cancellationToken);
 			}
+		}
+
+		private void Stop()
+		{
+			characterWalker.Stop();
 		}
 	}
 }

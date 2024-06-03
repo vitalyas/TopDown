@@ -31,5 +31,11 @@ namespace TopDown.Game.Character
 			
 			return false;
 		}
+
+		public void Stop()
+		{
+			navMeshAgent.isStopped = true;
+			navMeshAgent.ResetPath();
+		}
 	}
 }
