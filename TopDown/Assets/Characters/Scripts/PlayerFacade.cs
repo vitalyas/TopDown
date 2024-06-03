@@ -1,4 +1,5 @@
 using TopDown.Game.Character.Tasks;
+using TopDown.Saves;
 using TopDown.Utilities;
 using UnityEngine;
 using Zenject;
@@ -10,15 +11,19 @@ namespace TopDown.Game.Character
 		private CharacterTaskQueue characterTaskQueue;
 		private CharacterWalker characterWalker;
 		new private Camera camera;
+		private SaveProvider saveProvider;
 
 		[Inject]
 		private void Construct(CharacterSettings playerSettings,
 			CharacterWalker characterWalker,
-			Camera camera)
+			Camera camera,
+			SaveProvider saveProvider)
 		{
 			characterTaskQueue = new CharacterTaskQueue(playerSettings.TasksCount);
 			this.characterWalker = characterWalker;
 			this.camera = camera;
+			this.saveProvider = saveProvider;
+			transform.position = saveProvider.GetSaveModel().playerSaveModel.position;
 		}
 
 		private void OnEnable()
@@ -41,6 +46,8 @@ namespace TopDown.Game.Character
 
 		private void OnExitButtonClicked(GameExitButtonPressedEvent e)
 		{
+			saveProvider.GetSaveModel().playerSaveModel.position = transform.position;
+			saveProvider.Save();
 			characterTaskQueue.Stop();
 		}
 	}

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 namespace TopDown
 {
@@ -27,6 +28,18 @@ namespace TopDown
 		public static void Unsubscribe<T>(Action<T> action)
 		{
 			instance.UnsubscribeInternal(action);
+		}
+
+		public static async UniTask WaitFor<T>()
+		{
+			var hasInvoked = false;
+			Action<T> handler = _ => hasInvoked = true;
+			Subscribe(handler);
+			
+			while (!hasInvoked)
+				await UniTask.DelayFrame(1);
+			
+			Unsubscribe(handler);
 		}
 
 		private void SubscribeInternal<T>(Action<T> action)

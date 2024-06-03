@@ -1,14 +1,17 @@
 using UnityEngine;
 using Zenject;
 
-public class LoadingInstaller : MonoInstaller
+namespace TopDown.SceneLoader
 {
-	[SerializeField]
-	private LoadingScreen loadingScreen;
-
-	public override void InstallBindings()
+	public class LoadingInstaller : MonoInstaller
 	{
-		Container.Bind<LoadingScreen>().FromComponentInNewPrefab(loadingScreen).AsSingle();
-		Container.Bind<ISceneLoader>().To<SceneLoaderDecorator>().AsSingle().NonLazy();
+		[SerializeField]
+		private LoadingScreen loadingScreen;
+
+		public override void InstallBindings()
+		{
+			Container.Bind<LoadingScreen>().FromComponentInNewPrefab(loadingScreen).AsSingle();
+			Container.Bind<ISceneLoaderDecorator>().To<SceneLoaderDecorator>().AsSingle();
+		}
 	}
 }

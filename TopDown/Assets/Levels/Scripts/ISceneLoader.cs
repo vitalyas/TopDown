@@ -1,6 +1,9 @@
 using Cysharp.Threading.Tasks;
 
-public interface ISceneLoader
+namespace TopDown.SceneLoader
 {
-	UniTask Load(string sceneName, SceneType sceneType);
+	public interface ISceneLoader
+	{
+		UniTask Load(string sceneName, SceneType sceneType);
+	}
 }
