@@ -9,13 +9,16 @@ namespace TopDown.Game.Character
 	{
 		private CharacterTaskQueue characterTaskQueue;
 		private CharacterWalker characterWalker;
+		new private Camera camera;
 
 		[Inject]
 		private void Construct(CharacterSettings playerSettings,
-			CharacterWalker characterWalker)
+			CharacterWalker characterWalker,
+			Camera camera)
 		{
 			characterTaskQueue = new CharacterTaskQueue(playerSettings.TasksCount);
 			this.characterWalker = characterWalker;
+			this.camera = camera;
 		}
 
 		private void OnEnable()
@@ -30,7 +33,7 @@ namespace TopDown.Game.Character
 
 		private void OnFloorClicked(ObjectClickedEvent e)
 		{
-			characterTaskQueue.Enqueue(new CharacterTaskWalk(characterWalker, CoordinatesUtility.ScreenCoordinatesToWorld(e.ClickPositionOnScreen)));
+			characterTaskQueue.Enqueue(new CharacterTaskWalk(characterWalker, CoordinatesUtility.ScreenCoordinatesToWorld(e.ClickPositionOnScreen, camera)));
 			characterTaskQueue.TryStart();
 		}
 	}
