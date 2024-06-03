@@ -1,11 +1,11 @@
 using System;
-using UnityEngine;
+using TopDown.Utilities;
 
 namespace TopDown.Saves
 {
 	[Serializable]
 	public class TaskSaveModel
 	{
-		public Vector2 position;
+		public SerializableVector2 position;
 	}
 }

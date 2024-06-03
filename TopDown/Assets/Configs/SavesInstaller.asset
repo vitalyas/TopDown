@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 253c7dab6b691bb4a8cfd696ded03b7b, type: 3}
   m_Name: SavesInstaller
   m_EditorClassIdentifier: 
-  saveMode: 0
+  saveMode: 1

@@ -1,8 +1,8 @@
-using UnityEngine;
+using System;
 
 namespace TopDown.Saves
 {
-	[SerializeField]
+	[Serializable]
 	public class SaveModel
 	{
 		public PlayerSaveModel playerSaveModel = new();

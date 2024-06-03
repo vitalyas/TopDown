@@ -47,7 +47,7 @@ namespace TopDown.Game.Character
 
 		private void OnFloorClicked(ObjectClickedEvent e)
 		{
-			saveProvider.GetSaveModel().playerSaveModel.tasks.Add(new TaskSaveModel{ position = e.ClickPositionOnScreen});
+			saveProvider.GetSaveModel().playerSaveModel.tasks.Add(new TaskSaveModel { position = new SerializableVector2(e.ClickPositionOnScreen) });
 			saveProvider.Save();
 			characterTaskQueue.Enqueue(new CharacterTaskWalk(characterWalker, CoordinatesUtility.ScreenCoordinatesToWorld(e.ClickPositionOnScreen, camera)));
 			characterTaskQueue.TryStart();
@@ -55,14 +55,14 @@ namespace TopDown.Game.Character
 
 		private void OnExitButtonClicked(GameExitButtonPressedEvent e)
 		{
-			saveProvider.GetSaveModel().playerSaveModel.position = transform.position;
+			saveProvider.GetSaveModel().playerSaveModel.position = new SerializableVector3(transform.position);
 			saveProvider.Save();
 			characterTaskQueue.Stop();
 		}
 
 		private void OnTaskCompleted(CharacterTaskCompletedEvent e)
 		{
-			saveProvider.GetSaveModel().playerSaveModel.position = transform.position;
+			saveProvider.GetSaveModel().playerSaveModel.position = new SerializableVector3(transform.position);
 			if(saveProvider.GetSaveModel().playerSaveModel.tasks.Count > 0)
 				saveProvider.GetSaveModel().playerSaveModel.tasks.RemoveAt(0);
 			saveProvider.Save();

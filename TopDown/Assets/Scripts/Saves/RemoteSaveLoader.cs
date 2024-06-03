@@ -6,9 +6,11 @@ using UnityEngine;
 namespace TopDown.Saves
 {
 	// Не remote конечно, но надеюсь для тестового достаточно подмены реализации
+	// Сделано так себе, время поджимает
 	public class RemoteSaveLoader : ISaveLoader
 	{
 		private string filePath = Application.persistentDataPath + "/save.dat";
+		private bool savingInProgress;
 
 		public void Load()
 		{
@@ -29,23 +31,36 @@ namespace TopDown.Saves
 				await UniTask.RunOnThreadPool(() =>
 				{
 					var formatter = new BinaryFormatter();
-					using var stream = File.Open(filePath, FileMode.Open, FileAccess.Read);
-					saveModel = (SaveModel)formatter.Deserialize(stream);
+					using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+					{
+						saveModel = (SaveModel)formatter.Deserialize(stream);
+					}
+					EventBus.Invoke(new SaveLoadedEvent(saveModel));
 				});
 			}
-
-			EventBus.Invoke(new SaveLoadedEvent(saveModel));
+			else
+			{
+				EventBus.Invoke(new SaveLoadedEvent(saveModel));
+			}
 		}
 
 		private async UniTask SaveAsync(SaveModel saveModel)
 		{
+			if (savingInProgress)
+				return;
+			
+			savingInProgress = true;
 			var formatter = new BinaryFormatter();
 
 			await UniTask.RunOnThreadPool(() =>
 			{
-				using var stream = File.Open(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-				formatter.Serialize(stream, saveModel);
+				using (var stream = File.Open(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
+				{
+					formatter.Serialize(stream, saveModel);
+				}
 			});
+			
+			savingInProgress = false;
 		}
 	}
 }
