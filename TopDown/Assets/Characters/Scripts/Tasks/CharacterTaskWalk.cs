@@ -23,7 +23,10 @@ namespace TopDown.Game.Character.Tasks
 			while (characterWalker.IsWalking())
 			{
 				if (!cancellationToken.IsCancellationRequested)
+				{
 					await UniTask.DelayFrame(1, cancellationToken: cancellationToken);
+					EventBus.Invoke(new CharacterTaskCompletedEvent());
+				}
 			}
 		}
 
