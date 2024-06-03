@@ -6,10 +6,13 @@ namespace TopDown.SceneLoader
 	{
 		private readonly SceneLoader sceneLoader = new();
 		private readonly LoadingScreen loadingScreen;
+		private readonly ScenesSettings scenesSettings;
 
-		public SceneLoaderDecorator(LoadingScreen loadingScreen)
+		public SceneLoaderDecorator(LoadingScreen loadingScreen,
+			ScenesSettings scenesSettings)
 		{
 			this.loadingScreen = loadingScreen;
+			this.scenesSettings = scenesSettings;
 			LoadStartScenes().Forget();
 		}
 
@@ -22,7 +25,7 @@ namespace TopDown.SceneLoader
 		{
 			loadingScreen.Show();
 			await Load("Menu", SceneType.UI);
-			await Load("Level_0", SceneType.Game);
+			await Load(scenesSettings.GameSceneName, SceneType.Game);
 			// Искренне не понимаю зачем экрану висеть n секунд.
 			// Игрока и так могут раздражать загрузки, нет причин делать их дольше.
 			await UniTask.Delay(2000);
